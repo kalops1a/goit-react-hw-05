@@ -6,31 +6,50 @@ import styles from './MovieReviews.module.css';
 function MovieReviews() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchReviews() {
-      const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
-        headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_TMDB_API_KEY}`
-        }
-      });
-      setReviews(response.data.results);
+      setLoading(true);
+      setError('');
+
+      try {
+        const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
+          params: {
+            api_key: import.meta.env.VITE_TMDB_API_KEY 
+          }
+        });
+        setReviews(response.data.results);
+      } catch (err) {
+        setError('Failed to fetch reviews');
+        console.error('Error fetching reviews:', err.message || err);
+      } finally {
+        setLoading(false);
+      }
     }
-    
+
     fetchReviews();
   }, [movieId]);
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div>
+    <div className={styles.reviewsContainer}>
       <h3>Reviews</h3>
-      <ul>
-        {reviews.map(review => (
-          <li key={review.id}>
-            <h4>{review.author}</h4>
-            <p>{review.content}</p>
-          </li>
-        ))}
-      </ul>
+      {reviews.length > 0 ? (
+        <ul className={styles.reviewsList}>
+          {reviews.map(review => (
+            <li key={review.id} className={styles.reviewItem}>
+              <h4>{review.author}</h4>
+              <p>{review.content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No reviews available</p>
+      )}
     </div>
   );
 }
