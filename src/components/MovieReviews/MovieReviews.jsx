@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import styles from './MovieReviews.module.css';
 
 function MovieReviews() {
   const { movieId } = useParams();

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-import MovieList from '../components/MovieList';
+import MovieList from '../../components/MovieList/MovieList';
+import styles from './MoviesPage.module.css';
 
 function MoviesPage() {
   const [query, setQuery] = useState('');
