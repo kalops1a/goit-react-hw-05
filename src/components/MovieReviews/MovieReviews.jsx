@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './MovieReviews.module.css';
 
+const API_KEY = 'a6ab354a73d4ec86c53289fa92511a9d';
+
 function MovieReviews() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
@@ -14,7 +16,7 @@ function MovieReviews() {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
           params: {
-            api_key: import.meta.env.VITE_TMDB_API_KEY
+            api_key: API_KEY
           }
         });
         setReviews(response.data.results);
@@ -25,7 +27,7 @@ function MovieReviews() {
         setLoading(false);
       }
     }
-
+    
     fetchReviews();
   }, [movieId]);
 

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import styles from './MovieCast.module.css';
 
+const API_KEY = 'a6ab354a73d4ec86c53289fa92511a9d';
+
 function MovieCast() {
   const { movieId } = useParams();
   const [cast, setCast] = useState([]);
@@ -14,7 +16,7 @@ function MovieCast() {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
           params: {
-            api_key: import.meta.env.VITE_TMDB_API_KEY
+            api_key: API_KEY
           }
         });
         setCast(response.data.cast);
@@ -39,8 +41,12 @@ function MovieCast() {
         {cast.length > 0 ? (
           cast.map(actor => (
             <li key={actor.cast_id}>
-              <img src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`} alt={actor.name} />
-              <p>{actor.name} as {actor.character}</p>
+              <img
+                src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
+                alt={actor.name}
+                className={styles.actorImage}
+              />
+              {actor.name} as {actor.character}
             </li>
           ))
         ) : (

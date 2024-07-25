@@ -3,28 +3,30 @@ import { Link, Outlet, useParams, useLocation, useNavigate } from 'react-router-
 import axios from 'axios';
 import styles from './MovieDetailsPage.module.css';
 
+const API_KEY = 'a6ab354a73d4ec86c53289fa92511a9d';
+
 function MovieDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const prevLocationRef = useRef(location.state);
+  const prevLocation = useRef(location.state);
 
   useEffect(() => {
     async function fetchMovieDetails() {
       const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
         params: {
-          api_key: import.meta.env.VITE_TMDB_API_KEY
+          api_key: API_KEY
         }
       });
       setMovie(response.data);
     }
-
+    
     fetchMovieDetails();
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(prevLocationRef.current?.from || '/movies');
+    navigate(prevLocation.current?.from || '/movies');
   };
 
   if (!movie) {
