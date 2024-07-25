@@ -11,19 +11,16 @@ function MovieReviews() {
 
   useEffect(() => {
     async function fetchReviews() {
-      setLoading(true);
-      setError('');
-
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
           params: {
-            api_key: import.meta.env.VITE_TMDB_API_KEY 
+            api_key: import.meta.env.VITE_TMDB_API_KEY
           }
         });
         setReviews(response.data.results);
       } catch (err) {
         setError('Failed to fetch reviews');
-        console.error('Error fetching reviews:', err.message || err);
+        console.error('Error fetching reviews:', err);
       } finally {
         setLoading(false);
       }
@@ -36,20 +33,20 @@ function MovieReviews() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className={styles.reviewsContainer}>
+    <div>
       <h3>Reviews</h3>
-      {reviews.length > 0 ? (
-        <ul className={styles.reviewsList}>
-          {reviews.map(review => (
-            <li key={review.id} className={styles.reviewItem}>
+      <ul>
+        {reviews.length > 0 ? (
+          reviews.map(review => (
+            <li key={review.id}>
               <h4>{review.author}</h4>
               <p>{review.content}</p>
             </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No reviews available</p>
-      )}
+          ))
+        ) : (
+          <li>No reviews available</li>
+        )}
+      </ul>
     </div>
   );
 }

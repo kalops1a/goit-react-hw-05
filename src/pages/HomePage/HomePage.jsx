@@ -3,7 +3,7 @@ import axios from 'axios';
 import MovieList from '../../components/MovieList/MovieList';
 import styles from './HomePage.module.css';
 
-// API key from environment variables
+
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 function HomePage() {
