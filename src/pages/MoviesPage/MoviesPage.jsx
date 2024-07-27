@@ -15,26 +15,24 @@ function MoviesPage() {
   const query = searchParams.get('query') || '';
 
   useEffect(() => {
+    if (!query) {
+      return;
+    }
+
     async function fetchMovies() {
-      if (!query) return;
       setLoading(true);
       setError('');
-
       try {
-        const response = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
-          headers: {
-            Authorization: `Bearer ${API_KEY}`
-          },
+        const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
           params: {
-            query,
+            api_key: API_KEY,
+            query: query,
             include_adult: false,
-            language: 'en-US',
-            page: 1
-          }
+          },
         });
         setMovies(response.data.results);
       } catch (err) {
-        setError('Failed to fetch movies');
+        setError('Error fetching movies');
         console.error('Error fetching movies:', err);
       } finally {
         setLoading(false);
@@ -44,22 +42,30 @@ function MoviesPage() {
     fetchMovies();
   }, [query]);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const searchQuery = form.elements.search.value;
-    setSearchParams({ query: searchQuery });
+  const handleSearch = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formQuery = form.elements.search.value.trim();
+    if (formQuery) {
+      setSearchParams({ query: formQuery });
+    }
   };
 
   return (
-    <div className={styles.moviesPage}>
+    <div className={styles.container}>
       <form onSubmit={handleSearch}>
-        <input type="text" name="search" defaultValue={query} />
+        <input
+          type="text"
+          name="search"
+          defaultValue={query}
+          placeholder="Search for movies"
+        />
         <button type="submit">Search</button>
       </form>
+
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {movies.length > 0 ? <MovieList movies={movies} /> : <p>No movies found</p>}
+      <MovieList movies={movies} />
     </div>
   );
 }

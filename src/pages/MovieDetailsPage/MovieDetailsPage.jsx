@@ -10,23 +10,25 @@ function MovieDetailsPage() {
   const [movie, setMovie] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const prevLocation = useRef(location.state);
+  const prevLocation = useRef(location.state?.from || '/movies');
 
   useEffect(() => {
     async function fetchMovieDetails() {
-      const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
-        params: {
-          api_key: API_KEY
-        }
-      });
-      setMovie(response.data);
+      try {
+        const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
+          params: { api_key: API_KEY }
+        });
+        setMovie(response.data);
+      } catch (err) {
+        console.error('Error fetching movie details:', err);
+      }
     }
-    
+
     fetchMovieDetails();
   }, [movieId]);
 
   const handleGoBack = () => {
-    navigate(prevLocation.current?.from || '/movies');
+    navigate(prevLocation.current);
   };
 
   if (!movie) {

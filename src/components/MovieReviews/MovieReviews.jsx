@@ -15,9 +15,7 @@ function MovieReviews() {
     async function fetchReviews() {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, {
-          params: {
-            api_key: API_KEY
-          }
+          params: { api_key: API_KEY }
         });
         setReviews(response.data.results);
       } catch (err) {
@@ -27,7 +25,7 @@ function MovieReviews() {
         setLoading(false);
       }
     }
-    
+
     fetchReviews();
   }, [movieId]);
 
@@ -35,7 +33,7 @@ function MovieReviews() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
+    <div className={styles.reviewsContainer}>
       <h3>Reviews</h3>
       <ul>
         {reviews.length > 0 ? (

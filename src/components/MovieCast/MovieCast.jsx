@@ -15,9 +15,7 @@ function MovieCast() {
     async function fetchCast() {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-          params: {
-            api_key: API_KEY
-          }
+          params: { api_key: API_KEY }
         });
         setCast(response.data.cast);
       } catch (err) {
@@ -41,11 +39,7 @@ function MovieCast() {
         {cast.length > 0 ? (
           cast.map(actor => (
             <li key={actor.cast_id}>
-              <img
-                src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                alt={actor.name}
-                className={styles.actorImage}
-              />
+              <img src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`} alt={actor.name} />
               {actor.name} as {actor.character}
             </li>
           ))
